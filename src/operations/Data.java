@@ -3,6 +3,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Data {
+
     private int dimension;
 
     public int getDimension() {
@@ -192,7 +193,7 @@ public class Data {
     }
 
     public int min(int[] vector) {
-        int a = 2147483647;
+        int a = vector[0];
         for (int value : vector) {
             if (value < a)
                 a = value;
@@ -201,10 +202,7 @@ public class Data {
     }
 
     public int min(int start, int end, int[] vector) {
-        int a = 2147483647;
-        if (end == 0)
-            end = start + 1;
-
+        int a = vector[0];
         for (int i = start; i < end; i++) {
             if (vector[i] < a)
                 a = vector[i];
@@ -213,7 +211,7 @@ public class Data {
     }
 
     public int max(int[] vector) {
-        int a = -2147483648;
+        int a = vector[0];
         for (int value : vector) {
             if (value > a)
                 a = value;
@@ -222,10 +220,7 @@ public class Data {
     }
 
     public int max(int start, int end, int[] vector) {
-        int a = -2147483648;
-        if (end == 0)
-            end = start + 1;
-
+        int a = vector[0];
         for (int i = start; i < end; i++) {
             if (vector[i] > a)
                 a = vector[i];

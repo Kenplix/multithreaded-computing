@@ -12,7 +12,7 @@ public class FirstTask extends Thread {
     public void run() {
         Main.Z = Main.d.vectorInput(1);
         firstMonitor.signalZ();
-        int a1 = Main.d.max(0, Main.border, Main.Z);
+        int a1 = Main.d.max(0, Main.border - 1, Main.Z);
         firstMonitor.recordMax(a1);
         firstMonitor.signalA();
 

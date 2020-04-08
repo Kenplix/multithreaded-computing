@@ -15,8 +15,7 @@ public class LastTask extends Thread {
         secondMonitor.signalInput();
 
         firstMonitor.waitZ();
-
-        int an = Main.d.max(Main.numberOfThreads - Main.border, Main.numberOfThreads, Main.Z);
+        int an = Main.d.max(Main.matrixDimension - Main.border, Main.matrixDimension - 1, Main.Z);
 
         firstMonitor.recordMax(an);
         firstMonitor.signalA();

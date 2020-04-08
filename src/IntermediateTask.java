@@ -13,7 +13,7 @@ public class IntermediateTask extends Thread {
     @Override
     public void run() {
         firstMonitor.waitZ();
-        int ai = Main.d.max((n - 1) * Main.border, n * Main.border, Main.Z);
+        int ai = Main.d.max((n - 1) * Main.border, n * Main.border - 1, Main.Z);
         firstMonitor.recordMax(ai);
         firstMonitor.signalA();
 

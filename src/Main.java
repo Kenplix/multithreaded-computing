@@ -3,8 +3,8 @@ import operations.Data;
 public class Main {
 
     static Data d;
-    private static final int matrixDimension = 8;
-    static final int numberOfThreads = 5000;
+    private static final int numberOfThreads = 30;
+    static final int matrixDimension = 800;
     static final int border = matrixDimension / numberOfThreads;
     static int[] Z = new int[matrixDimension];
     static int[] C = new int[matrixDimension];
@@ -39,7 +39,7 @@ public class Main {
     /*
     MA = a*MO + (B*C)(MR*MX)
      */
-    private static int[][] calculateFunction(int a, int[][] MO, int[] B, int[] C, int[][] MR, int[][] MX) {
+    static private int[][] calculateFunction(int a, int[][] MO, int[] B, int[] C, int[][] MR, int[][] MX) {
         return  d.matrixAdd(d.intMatrixMult(a, MO), d.intMatrixMult(d.vectorMult(B, C), d.matrixMult(MR, MX)));
     }
 
@@ -50,10 +50,8 @@ public class Main {
         secondMonitor.waitInput();
 
         int[][] MR = secondMonitor.getMR();
-
         firstMonitor.waitA();
         int a = firstMonitor.getA();
-
-        Main.MA = Main.calculateFunction(a, Main.MO, Main.B, Main.C, MR, Main.MX);
+        MA = calculateFunction(a, MO, B, C, MR, MX);
     }
 }
