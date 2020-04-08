@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class LastTask extends Thread {
 
     private final FirstMonitor firstMonitor;
@@ -11,12 +13,16 @@ public class LastTask extends Thread {
     @Override
     public void run() {
         System.out.println("Last task started");
+        int [][] MB = new int[Main.matrixDimension][Main.matrixDimension];
+
         for (int i = 0; i < Main.matrixDimension; i++) {
             for (int j = 0; j < Main.matrixDimension; j++) {
-                Main.ME[i][j] = 1;
+                MB[i][j] = 1;
             }
         }
+        secondMonitor.writeMR(MB);
         secondMonitor.signalInput();
+
         firstMonitor.waitZ();
 
         int aL = -429496729;
@@ -24,20 +30,30 @@ public class LastTask extends Thread {
             if (Main.Z[i] > aL)
                 aL = Main.Z[i];
         }
-        firstMonitor.max(aL);
+        firstMonitor.recordMax(aL);
         firstMonitor.signalA();
 
+        Arrays.fill(Main.B, 1);
+        secondMonitor.signalInput();
+
+        for (int i = 0; i < Main.matrixDimension; i++) {
+            for (int j = 0; j < Main.matrixDimension; j++) {
+                Main.MO[i][j] = 1;
+            }
+        }
+        secondMonitor.signalInput();
+
         secondMonitor.waitInput();
-        int[][] MBL = secondMonitor.copyMB();
+        int[][] MRn = secondMonitor.getMR();
 
         firstMonitor.waitA();
-        aL = firstMonitor.copyA();
+        aL = firstMonitor.getA();
         for (int i = Main.H * (Main.numberOfThreads - 1); i < Main.matrixDimension; i++) {
             for (int j = 0; j < Main.matrixDimension; j++) {
                 for (int k = 0; k < Main.matrixDimension; k++) {
-                    Main.MA[i][j] += MBL[i][k] * Main.MC[k][j];
+                    Main.MA[i][j] += MRn[i][k] * Main.MX[k][j];
                 }
-                Main.MA[i][j] = aL * (Main.MA[i][j] - Main.ME[i][j]);
+                Main.MA[i][j] = aL * (Main.MA[i][j] - Main.MX[i][j]);
             }
         }
         secondMonitor.signalMA();

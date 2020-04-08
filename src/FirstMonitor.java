@@ -1,20 +1,20 @@
 class FirstMonitor {
 
-    private int P;
+    private int numberOfThreads;
     private int F1;
     private int F2;
-    private int a = -429496729;
+    private int a = -2147483648; //min int value
 
-    FirstMonitor(int P) {
-        this.P = P;
+    FirstMonitor(int numberOfThreads) {
+        this.numberOfThreads = numberOfThreads;
     }
 
-    synchronized void max(int ai) {
+    synchronized void recordMax(int ai) {
         if (ai > a)
             a = ai;
     }
 
-    synchronized int copyA() {
+    synchronized int getA() {
         return a;
     }
 
@@ -30,7 +30,7 @@ class FirstMonitor {
 
     synchronized void waitA() {
         try {
-            while (F1 != P)
+            while (F1 != numberOfThreads)
                 wait();
             notify();
         } catch (InterruptedException e) {

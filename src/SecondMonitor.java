@@ -1,20 +1,20 @@
 class SecondMonitor {
 
-    private int P;
+    private int numberOfThreads;
     private int F1;
     private int F2;
-    private int[][] MB;
+    private int[][] MR;
 
-    SecondMonitor(int P) {
-        this.P = P;
+    SecondMonitor(int numberOfThreads) {
+        this.numberOfThreads = numberOfThreads;
     }
 
-    synchronized void writeMB(int [][] MB) {
-        this.MB = MB;
+    synchronized void writeMR(int [][] MR) {
+        this.MR = MR;
     }
 
-    synchronized int[][] copyMB() {
-        return MB;
+    synchronized int[][] getMR() {
+        return MR;
     }
 
     synchronized void signalInput() {
@@ -29,7 +29,7 @@ class SecondMonitor {
 
     synchronized void waitInput() {
         try {
-            while (F1 != 3)
+            while (F1 != 5)
                 wait();
             notify();
         } catch (InterruptedException e) {
@@ -39,7 +39,7 @@ class SecondMonitor {
 
     synchronized void waitMA() {
         try {
-            while (F2 != P - 1)
+            while (F2 != numberOfThreads - 1)
                 wait();
             notify();
         } catch (InterruptedException e) {

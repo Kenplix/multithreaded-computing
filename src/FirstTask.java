@@ -21,29 +21,42 @@ public class FirstTask extends Thread {
             if (Main.Z[i] > a1)
                 a1 = Main.Z[i];
         }
-        firstMonitor.max(a1);
+
+        firstMonitor.recordMax(a1);
         firstMonitor.signalA();
 
-        secondMonitor.waitInput();
-        int[][] MB1 = secondMonitor.copyMB();
+        Arrays.fill(Main.C, 1);
+        secondMonitor.signalInput();
 
-        firstMonitor.waitA();
-        a1 = firstMonitor.copyA();
-
-        for (int i = 0; i < Main.H; i++) {
+        for (int i = 0; i < Main.matrixDimension; i++) {
             for (int j = 0; j < Main.matrixDimension; j++) {
-                for (int k = 0; k < Main.matrixDimension; k++) {
-                    Main.MA[i][j] += MB1[i][k] * Main.MC[k][j];
-                }
-                Main.MA[i][j] = a1 * (Main.MA[i][j] - Main.ME[i][j]);
-
-//                if (Main.MA[i][j] == -1) {
-//                    break;
-//                }
+                Main.MX[i][j] = 1;
             }
         }
-        secondMonitor.waitMA();
+        secondMonitor.signalInput();
 
+        secondMonitor.waitInput();
+
+        int[][] MR1 = secondMonitor.getMR();
+
+        firstMonitor.waitA();
+        a1 = firstMonitor.getA();
+        // calculate function
+
+        int BmC = 0;
+        for (int i = 0; i < Main.H; i++) {
+            for (int j = 0; j < Main.matrixDimension; j++) {
+                BmC += Main.B[j] * Main.C[j];
+                for (int k = 0; k < Main.matrixDimension; k++) {
+                    Main.MO[i][j] = a1 * Main.MO[i][j];
+                    Main.MA[i][j] += MR1[i][k] * Main.MX[k][j];
+                }
+                Main.MA[i][j] = a1 * Main.MO[i][j] + Main.MX[i][j]);
+            }
+        }
+
+        secondMonitor.waitMA();
+        // show result
         if (Main.matrixDimension <= 15) {
             for (int i = 0; i < Main.matrixDimension; i++) {
                 for (int j = 0; j < Main.matrixDimension; j++) {

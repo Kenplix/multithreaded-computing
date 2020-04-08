@@ -19,20 +19,22 @@ public class IntermediateTask extends Thread {
             if (Main.Z[i] > ai)
                 ai = Main.Z[i];
         }
-
-        firstMonitor.max(ai);
+        firstMonitor.recordMax(ai);
         firstMonitor.signalA();
+
         secondMonitor.waitInput();
-        int[][] MBi = secondMonitor.copyMB();
+
+        int[][] MRi = secondMonitor.getMR();
+
         firstMonitor.waitA();
-        ai = firstMonitor.copyA();
+        ai = firstMonitor.getA();
 
         for (int i = Main.H * (n - 1); i < Main.H * n; i++) {
             for (int j = 0; j < Main.matrixDimension; j++) {
                 for (int k = 0; k < Main.matrixDimension; k++) {
-                    Main.MA[i][j] += MBi[i][k] * Main.MC[k][j];
+                    Main.MA[i][j] += MRi[i][k] * Main.MX[k][j];
                 }
-                Main.MA[i][j] = ai * (Main.MA[i][j] - Main.ME[i][j]);
+                Main.MA[i][j] = ai * (Main.MA[i][j] - Main.MX[i][j]);
             }
         }
         secondMonitor.signalMA();
