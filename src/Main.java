@@ -2,10 +2,10 @@ import operations.Data;
 
 public class Main {
 
-    static Data data;
-    static int matrixDimension = 800;
-    static int numberOfThreads = 500;
-    static final int H =  (int) (matrixDimension / numberOfThreads);
+    static Data d;
+    private static final int matrixDimension = 8;
+    static final int numberOfThreads = 5000;
+    static final int border = matrixDimension / numberOfThreads;
     static int[] Z = new int[matrixDimension];
     static int[] C = new int[matrixDimension];
     static int[] B = new int[matrixDimension];
@@ -14,19 +14,18 @@ public class Main {
     static int[][] MX = new int[matrixDimension][matrixDimension];
 
     public static void main(String[] args) {
-        data = new Data(matrixDimension);
-
+        d = new Data(matrixDimension);
         FirstMonitor firstMonitor = new FirstMonitor(numberOfThreads);
         SecondMonitor secondMonitor = new SecondMonitor(numberOfThreads);
 
-        FirstTask firstTask = new FirstTask(firstMonitor, secondMonitor, H);
-        LastTask lastTask = new LastTask(firstMonitor, secondMonitor, numberOfThreads - H);
+        FirstTask firstTask = new FirstTask(firstMonitor, secondMonitor);
+        LastTask lastTask = new LastTask(firstMonitor, secondMonitor);
 
         firstTask.start();
         lastTask.start();
 
-        for (int i = 2; i < numberOfThreads; i++) {
-            IntermediateTask task = new IntermediateTask(firstMonitor, secondMonitor, i);
+        for (int n = 2; n < numberOfThreads; n++) {
+            IntermediateTask task = new IntermediateTask(firstMonitor, secondMonitor, n);
             task.start();
         }
 
@@ -37,11 +36,24 @@ public class Main {
         }
     }
 
-    static int[][] calculateFunction(int a, int[][] MO, int[] B, int[] C, int[][] MR, int[][] MX) {
-        int[][] first = data.intMatrixMult(a, MO);
-        int second = data.vectorMult(B, C);
-        int[][] third = data.matrixMult(MR, MX);
-        int[][] fourth = data.intMatrixMult(second, third);
-        return  data.matrixAdd(first, fourth);
+    /*
+    MA = a*MO + (B*C)(MR*MX)
+     */
+    private static int[][] calculateFunction(int a, int[][] MO, int[] B, int[] C, int[][] MR, int[][] MX) {
+        return  d.matrixAdd(d.intMatrixMult(a, MO), d.intMatrixMult(d.vectorMult(B, C), d.matrixMult(MR, MX)));
+    }
+
+    static void boilerplateActions(FirstMonitor firstMonitor, SecondMonitor secondMonitor, boolean isIntermediate) {
+        if (!isIntermediate)
+            secondMonitor.signalInput();
+
+        secondMonitor.waitInput();
+
+        int[][] MR = secondMonitor.getMR();
+
+        firstMonitor.waitA();
+        int a = firstMonitor.getA();
+
+        Main.MA = Main.calculateFunction(a, Main.MO, Main.B, Main.C, MR, Main.MX);
     }
 }

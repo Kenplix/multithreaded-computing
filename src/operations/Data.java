@@ -28,12 +28,15 @@ public class Data {
         return vector;
     }
 
-    synchronized public void vectorPrint(int [] res){
+    synchronized public void vectorPrint(int [] vector){
         System.out.println();
-        for (int i = 0; i < dimension; i++){
-            System.out.print(res[i] + " ");
-        }
-        System.out.println();
+        if (vector.length <= 15) {
+            for (int i = 0; i < dimension; i++) {
+                System.out.print(vector[i] + " ");
+            }
+            System.out.println();
+        } else
+            System.out.println("vector[0] = " + vector[0]);
     }
 
     public int[][] matrixInput() {
@@ -58,14 +61,17 @@ public class Data {
 
     synchronized public void matrixPrint(int [][] matrix){
         System.out.println();
-        for (int i = 0; i < dimension; i++){
-            for (int j = 0; j < dimension;
-                 j++){
-                System.out.print(matrix[i][j] + " ");
+        if (matrix.length <= 15) {
+            for (int i = 0; i < dimension; i++) {
+                for (int j = 0; j < dimension;
+                     j++) {
+                    System.out.print(matrix[i][j] + " ");
+                }
+                System.out.println();
             }
             System.out.println();
-        }
-        System.out.println();
+        } else
+            System.out.println("matrix[0][0] = " + matrix[0][0]);
     }
 
     public int[] vectorAdd(int[] a, int[] b) {
@@ -196,6 +202,9 @@ public class Data {
 
     public int min(int start, int end, int[] vector) {
         int a = 2147483647;
+        if (end == 0)
+            end = start + 1;
+
         for (int i = start; i < end; i++) {
             if (vector[i] < a)
                 a = vector[i];
@@ -214,6 +223,9 @@ public class Data {
 
     public int max(int start, int end, int[] vector) {
         int a = -2147483648;
+        if (end == 0)
+            end = start + 1;
+
         for (int i = start; i < end; i++) {
             if (vector[i] > a)
                 a = vector[i];

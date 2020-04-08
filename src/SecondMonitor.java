@@ -29,7 +29,7 @@ class SecondMonitor {
 
     synchronized void waitInput() {
         try {
-            while (F1 != 5)
+            while (F1 != 5) // number of inputs except Z
                 wait();
             notify();
         } catch (InterruptedException e) {
