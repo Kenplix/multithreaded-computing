@@ -4,20 +4,22 @@ public class FirstTask extends Thread {
 
     private final FirstMonitor firstMonitor;
     private final SecondMonitor secondMonitor;
+    private final int border;
 
-    FirstTask(FirstMonitor firstMonitor, SecondMonitor secondMonitor) {
+    FirstTask(FirstMonitor firstMonitor, SecondMonitor secondMonitor, int border) {
         this.firstMonitor = firstMonitor;
         this.secondMonitor = secondMonitor;
+        this.border = border;
     }
 
     @Override
     public void run() {
         System.out.println("First task started");
-        Arrays.fill(Main.Z, 1);
+        Main.Z = Main.data.vectorInput(1);
         firstMonitor.signalZ();
 
         int a1 = -429496729;
-        for (int i = 0; i < Main.H; i++) {
+        for (int i = border - Main.H; i < border; i++) {
             if (Main.Z[i] > a1)
                 a1 = Main.Z[i];
         }
@@ -25,14 +27,10 @@ public class FirstTask extends Thread {
         firstMonitor.recordMax(a1);
         firstMonitor.signalA();
 
-        Arrays.fill(Main.C, 1);
+        Main.C = Main.data.vectorInput(1);
         secondMonitor.signalInput();
 
-        for (int i = 0; i < Main.matrixDimension; i++) {
-            for (int j = 0; j < Main.matrixDimension; j++) {
-                Main.MX[i][j] = 1;
-            }
-        }
+        Main.MX = Main.data.matrixInput(1);
         secondMonitor.signalInput();
 
         secondMonitor.waitInput();
@@ -41,22 +39,10 @@ public class FirstTask extends Thread {
 
         firstMonitor.waitA();
         a1 = firstMonitor.getA();
-        // calculate function
 
-        int BmC = 0;
-        for (int i = 0; i < Main.H; i++) {
-            for (int j = 0; j < Main.matrixDimension; j++) {
-                BmC += Main.B[j] * Main.C[j];
-                for (int k = 0; k < Main.matrixDimension; k++) {
-                    Main.MO[i][j] = a1 * Main.MO[i][j];
-                    Main.MA[i][j] += MR1[i][k] * Main.MX[k][j];
-                }
-                Main.MA[i][j] = a1 * Main.MO[i][j] + Main.MX[i][j]);
-            }
-        }
-
+        Main.MA = Main.calculateFunction(a1, Main.MO, Main.B, Main.C, MR1, Main.MX);
         secondMonitor.waitMA();
-        // show result
+
         if (Main.matrixDimension <= 15) {
             for (int i = 0; i < Main.matrixDimension; i++) {
                 for (int j = 0; j < Main.matrixDimension; j++) {

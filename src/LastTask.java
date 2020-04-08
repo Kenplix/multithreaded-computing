@@ -5,7 +5,7 @@ public class LastTask extends Thread {
     private final FirstMonitor firstMonitor;
     private final SecondMonitor secondMonitor;
 
-    LastTask(FirstMonitor firstMonitor, SecondMonitor secondMonitor) {
+    LastTask(FirstMonitor firstMonitor, SecondMonitor secondMonitor, int i) {
         this.firstMonitor = firstMonitor;
         this.secondMonitor = secondMonitor;
     }
