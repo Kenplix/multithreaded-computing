@@ -202,8 +202,8 @@ public class Data {
     }
 
     public int min(int start, int end, int[] vector) {
-        int a = vector[0];
-        for (int i = start; i < end; i++) {
+        int a = vector[start];
+        for (int i = start + 1; i < end; i++) {
             if (vector[i] < a)
                 a = vector[i];
         }
@@ -220,8 +220,8 @@ public class Data {
     }
 
     public int max(int start, int end, int[] vector) {
-        int a = vector[0];
-        for (int i = start; i < end; i++) {
+        int a = vector[start];
+        for (int i = start + 1; i < end; i++) {
             if (vector[i] > a)
                 a = vector[i];
         }
