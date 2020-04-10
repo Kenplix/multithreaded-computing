@@ -3,27 +3,40 @@ import operations.Data;
 public class Main {
 
     static Data data;
-    static final int countOfElements = 1000;
-    private static final int numberOfThreads = 1000;
-    static final int border = countOfElements / numberOfThreads;
+    static int border;
+    static int countOfElements;
 
-    static int[] Z = new int[countOfElements];
-    static int[] Q = new int[countOfElements];
+    static int[] Z;
+    static int[] Q;
 
-    static int[][] MO = new int[countOfElements][countOfElements];
-    static int[][] MX = new int[countOfElements][countOfElements];
-    static int[][] MC = new int[countOfElements][countOfElements];
-    static int[][] MA = new int[countOfElements][countOfElements];
+    static int[][] MO;
+    static int[][] MX;
+    static int[][] MC;
+    static int[][] MA;
 
-    private static int[][] TEMP = new int[countOfElements][countOfElements];
+    private static int[][] TEMP;
 
     public static void main(String[] args) {
-        if (border == 0 || countOfElements % numberOfThreads != 0)
+        countOfElements = Integer.parseInt(args[0]);
+        int countOfThreads = Integer.parseInt(args[1]);
+
+        border = countOfElements / countOfThreads;
+        if (border == 0 || countOfElements % countOfThreads != 0)
             throw new IllegalArgumentException("Unable to parallelize");
 
         data = new Data(countOfElements);
-        FirstMonitor firstMonitor = new FirstMonitor(numberOfThreads);
-        SecondMonitor secondMonitor = new SecondMonitor(numberOfThreads);
+        Z = new int[countOfElements];
+        Q = new int[countOfElements];
+
+        MO = new int[countOfElements][countOfElements];
+        MX = new int[countOfElements][countOfElements];
+        MC = new int[countOfElements][countOfElements];
+        MA = new int[countOfElements][countOfElements];
+
+        TEMP = new int[countOfElements][countOfElements];
+
+        FirstMonitor firstMonitor = new FirstMonitor(countOfThreads);
+        SecondMonitor secondMonitor = new SecondMonitor(countOfThreads);
 
         FirstTask firstTask = new FirstTask(firstMonitor, secondMonitor);
         LastTask lastTask = new LastTask(firstMonitor, secondMonitor);
@@ -31,7 +44,7 @@ public class Main {
         firstTask.start();
         lastTask.start();
 
-        for (int n = 1; n < numberOfThreads - 1; n++) {
+        for (int n = 1; n < countOfThreads - 1; n++) {
             IntermediateTask task = new IntermediateTask(firstMonitor, secondMonitor, n);
             task.start();
         }
@@ -43,6 +56,9 @@ public class Main {
         }
     }
 
+    /*
+    MA = max(Z) * MO + min(Q) * MC * (MR * MX) | a is max(Z) and b is min(Q)
+    */
     static void calclateFunction(int start, int end, int a, int b, int[][] MR, SecondMonitor secondMonitor) {
         for (int i = start; i <= end; i++)
             for (int j = 0; j < Main.countOfElements; j++)
