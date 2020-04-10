@@ -2,19 +2,26 @@ import operations.Data;
 
 public class Main {
 
-    static Data d;
-    private static final int numberOfThreads = 30;
-    static final int matrixDimension = 800;
-    static final int border = matrixDimension / numberOfThreads;
-    static int[] Z = new int[matrixDimension];
-    static int[] C = new int[matrixDimension];
-    static int[] B = new int[matrixDimension];
-    static int[][] MA = new int[matrixDimension][matrixDimension];
-    static int[][] MO = new int[matrixDimension][matrixDimension];
-    static int[][] MX = new int[matrixDimension][matrixDimension];
+    static Data data;
+    static final int countOfElements = 1000;
+    private static final int numberOfThreads = 1000;
+    static final int border = countOfElements / numberOfThreads;
+
+    static int[] Z = new int[countOfElements];
+    static int[] Q = new int[countOfElements];
+
+    static int[][] MO = new int[countOfElements][countOfElements];
+    static int[][] MX = new int[countOfElements][countOfElements];
+    static int[][] MC = new int[countOfElements][countOfElements];
+    static int[][] MA = new int[countOfElements][countOfElements];
+
+    private static int[][] TEMP = new int[countOfElements][countOfElements];
 
     public static void main(String[] args) {
-        d = new Data(matrixDimension);
+        if (border == 0 || countOfElements % numberOfThreads != 0)
+            throw new IllegalArgumentException("Unable to parallelize");
+
+        data = new Data(countOfElements);
         FirstMonitor firstMonitor = new FirstMonitor(numberOfThreads);
         SecondMonitor secondMonitor = new SecondMonitor(numberOfThreads);
 
@@ -24,7 +31,7 @@ public class Main {
         firstTask.start();
         lastTask.start();
 
-        for (int n = 2; n < numberOfThreads; n++) {
+        for (int n = 1; n < numberOfThreads - 1; n++) {
             IntermediateTask task = new IntermediateTask(firstMonitor, secondMonitor, n);
             task.start();
         }
@@ -36,22 +43,20 @@ public class Main {
         }
     }
 
-    /*
-    MA = a*MO + (B*C)(MR*MX)
-     */
-    static private int[][] calculateFunction(int a, int[][] MO, int[] B, int[] C, int[][] MR, int[][] MX) {
-        return  d.matrixAdd(d.intMatrixMult(a, MO), d.intMatrixMult(d.vectorMult(B, C), d.matrixMult(MR, MX)));
-    }
+    static void calclateFunction(int start, int end, int a, int b, int[][] MR, SecondMonitor secondMonitor) {
+        for (int i = start; i <= end; i++)
+            for (int j = 0; j < Main.countOfElements; j++)
+                for (int k = 0; k < Main.countOfElements; k++)
+                    Main.TEMP[i][j] += MR[i][k] * Main.MX[k][j];
 
-    static void boilerplateActions(FirstMonitor firstMonitor, SecondMonitor secondMonitor, boolean isIntermediate) {
-        if (!isIntermediate)
-            secondMonitor.signalInput();
+        secondMonitor.signalRX();
+        secondMonitor.waitRX();
 
-        secondMonitor.waitInput();
-
-        int[][] MR = secondMonitor.getMR();
-        firstMonitor.waitA();
-        int a = firstMonitor.getA();
-        MA = calculateFunction(a, MO, B, C, MR, MX);
+        for (int i = start; i <= end; i++)
+            for (int j = 0; j < Main.countOfElements; j++) {
+                for (int k = 0; k < Main.countOfElements; k++)
+                    Main.MA[i][j] += Main.MC[i][k] * Main.TEMP[k][j];
+                Main.MA[i][j] = a * Main.MO[i][j] + b * Main.MA[i][j];
+            }
     }
 }

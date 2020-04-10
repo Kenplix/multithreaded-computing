@@ -1,31 +1,40 @@
 public class LastTask extends Thread {
 
-    private final FirstMonitor firstMonitor;
-    private final SecondMonitor secondMonitor;
+    private final FirstMonitor fM;
+    private final SecondMonitor sM;
 
-    LastTask(FirstMonitor firstMonitor, SecondMonitor secondMonitor) {
-        this.firstMonitor = firstMonitor;
-        this.secondMonitor = secondMonitor;
+    LastTask(FirstMonitor fM, SecondMonitor sM) {
+        this.fM = fM;
+        this.sM = sM;
     }
 
     @Override
     public void run() {
-        int [][] MR = Main.d.matrixInput(1);
-        secondMonitor.writeMR(MR);
-        secondMonitor.signalInput();
+        int end = Main.countOfElements - 1;
+        int start = Main.countOfElements - Main.border;
 
-        firstMonitor.waitZ();
-        int an = Main.d.max(Main.matrixDimension - Main.border, Main.matrixDimension - 1, Main.Z);
+        Main.data.vectorInput(1, Main.Q);
+        fM.signalQ();
 
-        firstMonitor.recordMax(an);
-        firstMonitor.signalA();
+        fM.recordMinQ(Main.data.min(start, end, Main.Q));
+        fM.signalB();
 
-        Main.B = Main.d.vectorInput(1);
-        secondMonitor.signalInput();
+        int [][] MR = new int[Main.countOfElements][Main.countOfElements];
+        Main.data.matrixInput(1, MR);
+        sM.writeMR(MR);
+        sM.signalInput();
 
-        Main.MO = Main.d.matrixInput(1);
-        Main.boilerplateActions(firstMonitor, secondMonitor, false);
-        secondMonitor.signalMA();
+        Main.data.matrixInput(1, Main.MO);
+        sM.signalInput();
+
+        fM.waitZ();
+        fM.recordMaxZ(Main.data.max(start, end, Main.Z));
+        fM.signalA();
+
+        sM.waitInput();
+        Main.calclateFunction(start, end, fM.getA(), fM.getB(), MR, sM);
+
+        sM.signalMA();
         System.gc();
     }
 }

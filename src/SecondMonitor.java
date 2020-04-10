@@ -3,6 +3,7 @@ class SecondMonitor {
     private int numberOfThreads;
     private int F1;
     private int F2;
+    private int F3;
     private int[][] MR;
 
     SecondMonitor(int numberOfThreads) {
@@ -27,9 +28,24 @@ class SecondMonitor {
         notify();
     }
 
+    synchronized void signalRX() {
+        F3++;
+        notify();
+    }
+
     synchronized void waitInput() {
         try {
-            while (F1 != 5) // number of inputs except Z
+            while (F1 != 4) // except Z and Q
+                wait();
+            notify();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    synchronized void waitRX() {
+        try {
+            while (F3 != numberOfThreads)
                 wait();
             notify();
         } catch (InterruptedException e) {
