@@ -83,7 +83,7 @@ public class Main {
     }
 
     static void singleThreadedImplementation() {
-        long tmpStart = System.currentTimeMillis();
+        // long tmpStart = System.currentTimeMillis();
         int start = 0;
         int end = countOfElements - 1;
 
@@ -111,7 +111,7 @@ public class Main {
                 MA[i][j] = a * MO[i][j] + b * MA[i][j];
             }
 
-        data.matrixPrint(MA);
-        System.out.println("Stream 0 runtime: " + (System.currentTimeMillis() - tmpStart));
+        // data.matrixPrint(MA);
+        // System.out.println("Stream 0 runtime: " + (System.currentTimeMillis() - tmpStart));
     }
 }

@@ -10,7 +10,7 @@ public class LastTask extends Thread {
 
     @Override
     public void run() {
-        long tmpStart = System.currentTimeMillis();
+        // long tmpStart = System.currentTimeMillis();
         int start = Main.countOfElements - Main.border;
         int end = Main.countOfElements - 1;
 
@@ -37,6 +37,6 @@ public class LastTask extends Thread {
 
         sM.signalMA();
         System.gc();
-        System.out.println("Stream " + (Main.countOfThreads - 1) + " runtime: " + (System.currentTimeMillis() - tmpStart));
+        // System.out.println("Stream " + (Main.countOfThreads - 1) + " runtime: " + (System.currentTimeMillis() - tmpStart));
     }
 }
