@@ -10,6 +10,7 @@ public class FirstTask extends Thread {
 
     @Override
     public void run() {
+        long tmpStart = System.currentTimeMillis();
         int start = 0;
         int end = Main.border - 1;
 
@@ -34,5 +35,6 @@ public class FirstTask extends Thread {
 
         sM.waitMA();
         Main.data.matrixPrint(Main.MA);
+        System.out.println("Stream 0 runtime: " + (System.currentTimeMillis() - tmpStart));
     }
 }

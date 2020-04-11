@@ -3,9 +3,11 @@ package operations;
 public class Data {
 
     private int dimension;
+    private int draw;
 
-    public Data(int dimension) {
+    public Data(int dimension, int draw) {
         this.dimension = dimension;
+        this.draw = draw;
     }
 
     public void vectorInput(int value, int[] res) {
@@ -15,7 +17,7 @@ public class Data {
 
     synchronized public void vectorPrint(int[] vector){
         System.out.println();
-        if (vector.length <= 15) {
+        if (vector.length <= draw) {
             for (int i = 0; i < dimension; i++)
                 System.out.print(vector[i] + " ");
             System.out.println();
@@ -31,7 +33,7 @@ public class Data {
 
     synchronized public void matrixPrint(int[][] matrix){
         System.out.println();
-        if (matrix.length <= 15) {
+        if (matrix.length <= draw) {
             for (int i = 0; i < dimension; i++) {
                 for (int j = 0; j < dimension; j++) {
                     System.out.print(matrix[i][j] + " ");

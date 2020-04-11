@@ -5,6 +5,7 @@ public class Main {
     static Data data;
     static int border;
     static int countOfElements;
+    static int countOfThreads;
 
     static int[] Z;
     static int[] Q;
@@ -18,13 +19,13 @@ public class Main {
 
     public static void main(String[] args) {
         countOfElements = Integer.parseInt(args[0]);
-        int countOfThreads = Integer.parseInt(args[1]);
+        countOfThreads = Integer.parseInt(args[1]);
 
         border = countOfElements / countOfThreads;
         if (border == 0 || countOfElements % countOfThreads != 0)
             throw new IllegalArgumentException("Unable to parallelize");
 
-        data = new Data(countOfElements);
+        data = new Data(countOfElements, 20);
         Z = new int[countOfElements];
         Q = new int[countOfElements];
 

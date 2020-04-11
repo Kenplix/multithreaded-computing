@@ -12,6 +12,7 @@ public class IntermediateTask extends Thread {
 
     @Override
     public void run() {
+        long tmpStart = System.currentTimeMillis();
         int start = n * Main.border;
         int end = (n + 1) * Main.border - 1;
 
@@ -28,5 +29,6 @@ public class IntermediateTask extends Thread {
 
         sM.signalMA();
         System.gc();
+        System.out.println("Stream " + n + " runtime: " + (System.currentTimeMillis() - tmpStart));
     }
 }
