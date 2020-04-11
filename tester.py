@@ -9,15 +9,29 @@ BIN_DIR = r'bin'
 FILE_PATH = r'src/Main.java'
 
 
-def data_path(number):
+def data_path(number: int) -> str:
     return f'data/AOT-{number}.csv'
 
 
-def tester(*thread_selection: int, elements: int, increment: int = 100, limit: int = 2000):
+def compiler() -> str:
+    """
+    Compiles a program written in Java and returns
+    the class name to run the program
+    """
+
     src_dir = os.path.dirname(FILE_PATH)
-    compiled_class = os.path.basename(FILE_PATH).replace('.java', '')
     compile_ = f'javac -sourcepath {src_dir} -d {BIN_DIR} {FILE_PATH}'
     os.system(compile_)
+    return os.path.basename(FILE_PATH).replace('.java', '')
+
+
+def tester(*thread_selection: int, elements: int, increment: int = 100, limit: int = 2000) -> None:
+    """
+    Executes a compiled program for certain
+    streams in increments of elements
+    """
+
+    compiled_class = compiler()
 
     start_value = elements
     for threads in thread_selection:
@@ -42,7 +56,11 @@ def tester(*thread_selection: int, elements: int, increment: int = 100, limit: i
             elements = start_value
 
 
-def drawer(*thread_selection):
+def drawer(*thread_selection: int) -> None:
+    """
+    Draws data recorded in CSV tables
+    for given streams if such tables exist
+    """
     fig, ax = plt.subplots()
     for threads in thread_selection:
         path = data_path(threads)
@@ -57,6 +75,6 @@ def drawer(*thread_selection):
 
 
 if __name__ == '__main__':
-    thread_selection = (1, 5, 10, 25, 50, 100)
-    tester(*thread_selection, elements=100)
-    drawer(*thread_selection)
+    threads = (1, 5, 10, 25, 50, 100)
+    tester(*threads, elements=100)
+    drawer(*threads)
