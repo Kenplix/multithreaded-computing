@@ -11,8 +11,8 @@ public class LastTask extends Thread {
     @Override
     public void run() {
         long tmpStart = System.currentTimeMillis();
-        int end = Main.countOfElements - 1;
         int start = Main.countOfElements - Main.border;
+        int end = Main.countOfElements - 1;
 
         Main.data.vectorInput(1, Main.Q);
         fM.signalQ();

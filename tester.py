@@ -5,8 +5,8 @@ BIN_DIR = r'bin'
 FILE_PATH = r'src/Main.java'
 
 def tester():
-    elements = 300
-    threads = 6
+    elements = 20
+    threads = 2
 
     SRC_DIR = os.path.dirname(FILE_PATH)
     COMPILED_CLASS = os.path.basename(FILE_PATH).replace('.java', '')

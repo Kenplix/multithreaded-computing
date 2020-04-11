@@ -36,6 +36,11 @@ public class Main {
 
         TEMP = new int[countOfElements][countOfElements];
 
+        if (countOfThreads == 1) {
+            singleThreadedImplementation();
+            System.exit(0);
+        }
+
         FirstMonitor firstMonitor = new FirstMonitor(countOfThreads);
         SecondMonitor secondMonitor = new SecondMonitor(countOfThreads);
 
@@ -62,18 +67,51 @@ public class Main {
     */
     static void calclateFunction(int start, int end, int a, int b, int[][] MR, SecondMonitor secondMonitor) {
         for (int i = start; i <= end; i++)
-            for (int j = 0; j < Main.countOfElements; j++)
-                for (int k = 0; k < Main.countOfElements; k++)
-                    Main.TEMP[i][j] += MR[i][k] * Main.MX[k][j];
+            for (int j = 0; j < countOfElements; j++)
+                for (int k = 0; k < countOfElements; k++)
+                    TEMP[i][j] += MR[i][k] * MX[k][j];
 
         secondMonitor.signalRX();
         secondMonitor.waitRX();
 
         for (int i = start; i <= end; i++)
-            for (int j = 0; j < Main.countOfElements; j++) {
-                for (int k = 0; k < Main.countOfElements; k++)
-                    Main.MA[i][j] += Main.MC[i][k] * Main.TEMP[k][j];
-                Main.MA[i][j] = a * Main.MO[i][j] + b * Main.MA[i][j];
+            for (int j = 0; j < countOfElements; j++) {
+                for (int k = 0; k < countOfElements; k++)
+                    MA[i][j] += MC[i][k] * TEMP[k][j];
+                MA[i][j] = a * MO[i][j] + b * MA[i][j];
             }
+    }
+
+    static void singleThreadedImplementation() {
+        long tmpStart = System.currentTimeMillis();
+        int start = 0;
+        int end = countOfElements - 1;
+
+        data.vectorInput(1, Z);
+        data.vectorInput(1, Q);
+
+        data.matrixInput(1, MC);
+        data.matrixInput(1, MX);
+        data.matrixInput(1, MO);
+        int [][] MR = new int[countOfElements][countOfElements];
+        data.matrixInput(1, MR);
+
+        int a = data.max(start, end, Z);
+        int b = data.min(start, end, Q);
+
+        for (int i = start; i <= end; i++)
+            for (int j = 0; j < countOfElements; j++)
+                for (int k = 0; k < countOfElements; k++)
+                    TEMP[i][j] += MR[i][k] * MX[k][j];
+
+        for (int i = start; i <= end; i++)
+            for (int j = 0; j < countOfElements; j++) {
+                for (int k = 0; k < countOfElements; k++)
+                    MA[i][j] += MC[i][k] * TEMP[k][j];
+                MA[i][j] = a * MO[i][j] + b * MA[i][j];
+            }
+
+        data.matrixPrint(MA);
+        System.out.println("Stream 0 runtime: " + (System.currentTimeMillis() - tmpStart));
     }
 }
