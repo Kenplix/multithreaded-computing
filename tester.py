@@ -1,26 +1,38 @@
 import os
 import time
+import csv
 
 BIN_DIR = r'bin'
 FILE_PATH = r'src/Main.java'
 
-def tester():
-    SRC_DIR = os.path.dirname(FILE_PATH)
-    COMPILED_CLASS = os.path.basename(FILE_PATH).replace('.java', '')
 
-    elements = 100
-    thread_selection = (1, 10, 100)
+def tester(*thread_selection: int, elements: int):
+    src_dir = os.path.dirname(FILE_PATH)
+    compiled_class = os.path.basename(FILE_PATH).replace('.java', '')
+    compile_ = f'javac -sourcepath {src_dir} -d {BIN_DIR} {FILE_PATH}'
+    os.system(compile_)
+
     for threads in thread_selection:
-        while elements != 3000:
-            compile = f'javac -sourcepath {SRC_DIR} -d {BIN_DIR} {FILE_PATH}'
-            execute = f'java -classpath {BIN_DIR} {COMPILED_CLASS} {elements} {threads}'
-            os.system(compile)
-            start = time.time()
-            os.system(execute)
-            print(f'Amount of elements: {elements}\n'
-                  f'Amount of threads: {threads}\n'
-                  f'Time execution: {time.time() - start}\n')
-            elements += 10
+        execute = f'java -classpath {BIN_DIR} {compiled_class} {elements} {threads}'
+        while elements <= 2000:
+            data_path = f'data/AOT-{threads}.csv'
+
+            if not os.path.isfile(data_path):
+                with open(data_path, 'a') as file:
+                    start = time.time()
+                    os.system(execute)
+                    time_ = time.time() - start
+
+                    writer = csv.DictWriter(file, fieldnames=['Elements', 'Time'])
+                    writer.writerow({
+                        'Elements': elements,
+                        'Time': time_,
+                    })
+                    elements += 100
+            else:
+                break
+        elements = 100
+
 
 if __name__ == '__main__':
-    tester()
+    tester(1, 10, 100, elements=100)
