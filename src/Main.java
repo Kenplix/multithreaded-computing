@@ -111,7 +111,7 @@ public class Main {
                 MA[i][j] = a * MO[i][j] + b * MA[i][j];
             }
 
-        // data.matrixPrint(MA);
+        data.matrixPrint(MA);
         // System.out.println("Stream 0 runtime: " + (System.currentTimeMillis() - tmpStart));
     }
 }

@@ -34,7 +34,7 @@ public class FirstTask extends Thread {
         Main.calclateFunction(start, end, fM.getA(), fM.getB(), sM.getMR(), sM);
 
         sM.waitMA();
-        // Main.data.matrixPrint(Main.MA);
+        Main.data.matrixPrint(Main.MA);
         // System.out.println("Stream 0 runtime: " + (System.currentTimeMillis() - tmpStart));
     }
 }

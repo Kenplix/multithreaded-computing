@@ -22,10 +22,9 @@ def tester(*thread_selection: int, elements: int, increment: int = 100, limit: i
     start_value = elements
     for threads in thread_selection:
         path = data_path(threads)
-        execute = f'java -classpath {BIN_DIR} {compiled_class} {elements} {threads}'
-
         if not os.path.isfile(path) or os.stat(path).st_size == 0:
             while elements <= limit:
+                execute = f'java -classpath {BIN_DIR} {compiled_class} {elements} {threads}'
                 start = time.time()
                 os.system(execute)
                 time_ = time.time() - start
@@ -34,27 +33,30 @@ def tester(*thread_selection: int, elements: int, increment: int = 100, limit: i
                     writer = csv.writer(file)
                     writer.writerow([elements, time_])
 
+                print(f'Amount of elements: {elements}\n'
+                      f'Amount of threads: {threads}\n'
+                      f'Lead time: {time_}\n')
+
                 elements += increment
         else:
             elements = start_value
 
 
 def drawer(*thread_selection):
-    elements = [[] for _ in range(len(thread_selection))]
-    times = [[] for _ in range(len(thread_selection))]
+    fig, ax = plt.subplots()
+    for threads in thread_selection:
+        path = data_path(threads)
+        if os.path.isfile(path) and os.stat(path).st_size != 0:
+            elements, time_ = np.loadtxt(path, unpack=True, delimiter=',')
+            ax.plot(elements, time_, label=path)
 
-    for index, threads in enumerate(thread_selection):
-        with open(data_path(threads), 'r') as f:
-            reader = csv.reader(f)
-            for elem, time_ in reader:
-                elements[index].append(elem)
-                times[index].append(time_)
-
-    print(times)
-    print(elements)
+    ax.set_xlabel('Elements')
+    ax.set_ylabel('Time')
+    ax.legend()
+    plt.show()
 
 
 if __name__ == '__main__':
-    thread_selection = (1, 10, 100)
+    thread_selection = (1, 5, 10, 25, 50, 100)
     tester(*thread_selection, elements=100)
     drawer(*thread_selection)
