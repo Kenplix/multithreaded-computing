@@ -15,7 +15,7 @@ def data_path(number: int) -> str:
 
 def compiler() -> str:
     """
-    Compiles a program written in Java and returns
+    Compiles a program written on Java and returns
     the class name to run the program
     """
 
