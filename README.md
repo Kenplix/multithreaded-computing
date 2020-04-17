@@ -7,7 +7,7 @@ The task is not the most useful, since under such conditions the calculations do
 When performing work, experience has been gained in building multi-threaded systems.
 
 # About code
-Uncomment strings in src if you want to see more details about threads
+Uncomment strings in ```src``` directory if you want to see more details about threads
 
 # How to run?
 1)clone or download this repository  
