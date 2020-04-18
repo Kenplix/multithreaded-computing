@@ -1,4 +1,4 @@
-# multithreaded-computing
+# Multithreaded computing
 Coursework on parallel programming where a function is calculated in N threads
 
 # About this work
