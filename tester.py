@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 BIN_DIR = r'bin'
-FILE_PATH = r'src/Main.java'
+FILE_PATH = r'src1/Main.java'
 
 
 def data_path(number: int) -> str:
